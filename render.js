@@ -36,14 +36,17 @@ class RenderTree {
         var y1 = y + Math.sin(a-0.5*PI)*r
         var y2 = y + Math.sin(a+0.5*PI)*r
 
-        /*
+        let rx = this.context
+        let tempStyle = rx.fillStyle
+
         rx.fillStyle = this.trunk
         for(let i = 0; i < 10; i++) {
             rx.moveTo(x1, y1)
             rx.lineTo(x2, y2)
             rx.stroke()
         }
-        */
+
+        rx.fillStyle = tempStyle
 
         this.context.fillStyle = this.trunk_stroke
 
@@ -57,15 +60,13 @@ class RenderTree {
             var yy1 = y2 - scale1*Math.sin(the)
             this.fillRect(xx1, yy1)
 
-            //var scale2 = dd*uniformRandom()*uniformRandom()
-            // var xx2 = x2 - scale2*Math.cos(the)
-            // var yy2 = y2 - scale2*Math.sin(the)
+            var scale2 = dd*uniformRandom()*uniformRandom()
+            var xx2 = x2 - scale2*Math.cos(the)
+            var yy2 = y2 - scale2*Math.sin(the)
 
-            /*
             this.fillRect(xx2, yy1)
             this.fillRect(xx1, yy2)
             this.fillRect(xx2, yy2)
-            */
         }
         // Trunk shade right
         var the_val = 0.5*PI+a

@@ -6,9 +6,6 @@ class Branch {
         this.y    = y
         this.r    = r
         this.a    = a
-
-        this.shade = 0
-
         // this.i = 0
         this.g = g
     }
@@ -19,7 +16,6 @@ class Branch {
         var angle = normalDistribution() * this.tree.branch_angle_max
         var scale = this.tree.one + this.tree.root_r - this.r
         var da = Math.pow((1+scale/this.tree.root_r), this.tree.branch_angle_exp)
-
 
         var dx = Math.cos(this.a)*this.tree.stepsize
         var dy = Math.sin(this.a)*this.tree.stepsize
@@ -53,16 +49,17 @@ class Tree {
         this.branch_angle_max      = branch_angle_max
         this.branch_angle_exp      = branch_angle_exp
         this.branch_prob_scale     = branch_prob_scale
+        this.init()
+    }
 
+    init() {
         this.Q = []
-
-        var branch = new Branch(this,
+        this.Q.push(new Branch(this,
                                 this.root_x,
                                 this.root_y,
                                 this.root_r,
                                 this.root_a,
-                                0)
-        this.Q.push(branch)
+                               0))
     }
 
     step() {
@@ -79,9 +76,8 @@ class Tree {
 
             let branch_prob = (this.root_r - branch.r + this.one) * this.branch_prob_scale
             if (Math.random() < branch_prob) {
-                debugger
                 let {x,y,a,r,g} = branch
-                let new_r = this.branch_split_diminish * r
+                let new_r = this.branch_split_diminish*r
                 let ra = (Math.pow(-1, randomInteger(2)) * uniformRandom()) * this.branch_split_angle
                 q_new.push(new Branch(this, x, y, new_r, a + ra, g + 1))
             }
@@ -89,15 +85,15 @@ class Tree {
                 q_remove.push(i)
                 q_new.push(branch)
             }
-
-            q_remove.reverse()
-
-            for (let r of q_remove) {
-                this.Q.splice(r, 1)
-            }
-
-            this.Q = this.Q.concat(q_new)
         }
+
+        q_remove.reverse()
+
+        for (let r of q_remove) {
+            this.Q.splice(r, 1)
+        }
+
+        this.Q = this.Q.concat(q_new)
     }
 }
 

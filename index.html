@@ -25,14 +25,18 @@
 
       ctx.fillStyle = "rgba(0,0,0,0.5)";
 
-        var i = 0;
-        var interval = setInterval(() => {
+        function drawStep() {
           tree.step()
           tree.Q.map((x) => render.drawBranch(x))
-          if (tree.Q.length == 0) {
-            clearInterval(interval);
+
+          if (tree.Q.length) {
+            setTimeout(drawStep, 75)
+          } else {
+            console.log("done")
           }
-        }, 50)
+        }
+
+        drawStep();
       }
     </script>
   </head>
@@ -53,7 +57,6 @@
      }
      const PI = Math.PI
      canvas = document.getElementById('tree');
-      const nmax  = Math.pow(2, 1e8)
       const size  = 600
       const one   = 1/size
 
@@ -65,8 +68,8 @@
 
       const branch_diminish       = one/32
       const branch_split_diminish = 0.71
+      const branch_prob_scale     = 1/(init_branch)/size*30
       const branch_split_angle    = 0.3*PI
-      const branch_prob_scale     = 1/(init_branch)/size*10
       const branch_angle_max      = 5*PI/size
       const branch_angle_exp      = 2
 
