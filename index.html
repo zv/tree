@@ -11,7 +11,7 @@
 
       var render = new RenderTree(size, front, back, trunk, trunk_stroke, grains, ctx)
         var tree = new Tree(mid,
-                            0.95,
+                            0.90,
                             init_branch,
                             (-1*PI)*0.5,
                             one,
@@ -30,7 +30,7 @@
           tree.Q.map((x) => render.drawBranch(x))
 
           if (tree.Q.length) {
-            setTimeout(drawStep, 75)
+            setTimeout(drawStep, 25)
           } else {
             console.log("done")
           }
@@ -55,20 +55,28 @@
      function randomInteger(n) {
        return Math.floor(Math.random() * n)
      }
-     const PI = Math.PI
-     canvas = document.getElementById('tree');
-      const size  = 600
+
+
+      function normalDistribution() {
+      var u = 1 - Math.random(); // Subtraction to flip [0, 1) to (0, 1].
+      var v = 1 - Math.random();
+      return Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+
+      }
+      const PI = Math.PI
+      canvas = document.getElementById('tree');
+      const size  = canvas.width
       const one   = 1/size
 
       // const #pi5 = 0.5*pi
 
       const mid = 0.5
       const init_branch = size*0.03*one
-      const grains = Math.ceil(size*0.02)
+      const grains = Math.floor(size*0.02)
 
       const branch_diminish       = one/32
       const branch_split_diminish = 0.71
-      const branch_prob_scale     = 1/(init_branch)/size*30
+      const branch_prob_scale     = 1/(init_branch)/size*20
       const branch_split_angle    = 0.3*PI
       const branch_angle_max      = 5*PI/size
       const branch_angle_exp      = 2
@@ -78,7 +86,6 @@
       const trunk_stroke = "rgba(0,0,0,1)"
       const trunk        = "rgba(255,255,255,1)"
       const trunk_shade  = "rgba(0,0,0,0.5)"
-      // const leaf         = [0,0,1,0.5]
 
 
 
