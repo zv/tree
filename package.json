@@ -12,7 +12,7 @@
     "webpack-dev-server": "^1.14.1"
   },
   "scripts": {
-    "build": "webpack",
+    "build": "webpack --optimize-minimize",
     "watch": "webpack --watch",
     "start": "webpack-dev-server --hot --inline"
   },
