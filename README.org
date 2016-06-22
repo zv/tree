@@ -5,7 +5,7 @@ manually written L rewrite system (there is no embedded interpreter).
 
 The rulechain for this tree is ~L=0.30 || X->XF(L)->(L--)~
 
-  [[https://github.com/zv/tree/blob/master/tree/README.org][file:screenshot.gif]]
+  [[https://github.com/zv/tree/blob/master/tree/README.org][file:screenshot.png]]
 
 
 *** Things Like This
