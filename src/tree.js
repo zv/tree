@@ -1,3 +1,5 @@
+import {normalDistribution, randomInteger, uniformRandom} from './utils.js'
+
 // const fname = './img/xx'
 class Branch {
     constructor(tree, x, y, r, a, g) {
@@ -28,7 +30,7 @@ class Branch {
 }
 
 
-class Tree {
+export class Tree {
     constructor(root_x, root_y, root_r,
                 root_a, one, stepsize,
                 branch_split_angle,
@@ -75,7 +77,7 @@ class Tree {
             }
 
             let branch_prob = (this.root_r - branch.r + this.one) * this.branch_prob_scale
-            if (Math.random() < branch_prob) {
+            if (uniformRandom() < branch_prob) {
                 let {x,y,a,r,g} = branch
                 let new_r = this.branch_split_diminish*r
                 let ra = (Math.pow(-1, randomInteger(2)) * uniformRandom()) * this.branch_split_angle

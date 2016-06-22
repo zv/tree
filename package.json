@@ -1,0 +1,37 @@
+{
+  "name": "algorithm_tree",
+  "version": "1.0.0",
+  "description": "Generate trees algorithmically",
+  "main": "bundle.js",
+  "dependencies": {},
+  "devDependencies": {
+    "babel-loader": "^6.2.4",
+    "babel-polyfill": "^6.9.1",
+    "babel-preset-es2015": "^6.9.0",
+    "webpack": "^1.13.1",
+    "webpack-dev-server": "^1.14.1"
+  },
+  "scripts": {
+    "build": "webpack",
+    "watch": "webpack --watch",
+    "start": "webpack-dev-server --hot --inline"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zv/tree.git"
+  },
+  "keywords": [
+    "algorithm"
+  ],
+  "author": "Zephyr Pellerin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zv/tree/issues"
+  },
+  "homepage": "https://github.com/zv/tree#readme"
+}
