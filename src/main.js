@@ -62,5 +62,3 @@ export function draw() {
 
     drawStep();
 }
-
-document.body.onload = () => draw()

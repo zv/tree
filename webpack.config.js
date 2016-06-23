@@ -6,8 +6,10 @@ var dir_build = path.resolve(__dirname, 'build');
 module.exports = {
     entry: path.resolve(dir_js, 'main.js'),
     output: {
+        libraryTarget: 'var',
+        library: 'ZVTree',
         path: dir_build,
-        filename: 'bundle.js'
+        filename: 'zv-tree.js'
     },
     module: {
         loaders: [
@@ -21,5 +23,5 @@ module.exports = {
     devtool: 'source-map',
     devServer: {
         contentBase: dir_build,
-    },
+    }
 };
