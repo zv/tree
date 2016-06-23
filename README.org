@@ -7,6 +7,7 @@ The rulechain for this tree is ~L=0.30 || X->XF(L)->(L--)~
 
   [[https://github.com/zv/tree/blob/master/tree/README.org][file:screenshot.png]]
 
+You can view it in action here: http://zv.github.io/algorithmic-tree.html
 
 *** Things Like This
 - http://www.complexification.net/gallery/machines/treeGarden/
