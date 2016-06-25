@@ -25,6 +25,16 @@ export class RenderTree {
         this.context.fillRect(adj_x, adj_y, n, n)
     }
 
+    fillLine(start, end) {
+        let ctx = this.context
+        let scale = this.n;
+
+        ctx.beginPath();
+        ctx.moveTo(scale * start.x, scale * start.y);
+        ctx.lineTo(scale * end.x, scale * end.y);
+        ctx.stroke();
+    }
+
     drawBranch(b) {
         var {a,r,x,y} = b
 
@@ -33,31 +43,31 @@ export class RenderTree {
             y1 = y + Math.sin(a-0.5*PI)*r,
             y2 = y + Math.sin(a+0.5*PI)*r
 
-        // Clear anything previously here
-        this.context.fillStyle = this.trunk
-        this.fillRectN(x1,y1,1)
-        this.fillRectN(x2,y2,1)
 
-        this.context.fillStyle = this.trunk_stroke
+        let ctx = this.context
+
+        // Make our line white & one pixel wide
+        ctx.strokeStyle = this.trunk
+        ctx.lineWidth = 1
+        this.fillLine(
+            {x: x1, y: y1}, // start
+            {x: x2, y: y2}  // end
+        )
+
+        ctx.fillStyle = this.trunk_stroke
 
         // Create our outline
         this.fillPixel(x1,y1)
         this.fillPixel(x2,y2)
 
         let makeTrunk = (xl, yl, the, dd, len) => {
-            if (len == 0) return
-
             var scales = [];
+
             for(let i = 0; i <= len; i++) {
                 scales[i] = Math.random() * dd * Math.random()
             }
-            var xxp = scales.map((s) => xl - s*Math.cos(the))
-            var yyp = scales.map((s) => yl - s*Math.sin(the))
-            /*
-            xxp.map((e,i) => {
-                this.fillPixel(e, yyp[i])
-            })
-            */
+            let xxp = scales.map((s) => xl - s*Math.cos(the)),
+                yyp = scales.map((s) => yl - s*Math.sin(the))
             zip(xxp,yyp).map(([xx,yy]) => this.fillPixel(xx,yy))
         }
 
