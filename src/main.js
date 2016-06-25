@@ -71,7 +71,7 @@ export function draw() {
 
     function drawStep() {
         tree.step()
-        tree.Q.map((x) => render.drawBranch(x))
+        tree.Q.map(render.drawBranch.bind(render))
 
         if (tree.Q.length) {
             setTimeout(drawStep, 10)
