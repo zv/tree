@@ -1,4 +1,4 @@
-export const PI = Math.PI
+export var PI = Math.PI
 
 export function square(n) {
     return n * n

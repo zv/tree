@@ -1,16 +1,10 @@
 import {PI, square, zip} from './utils.js'
 
 export class RenderTree {
-    constructor(n, front, back, trunk, trunk_stroke, grains, context) {
-        this.n            = n
-        this.one          = 1
-        this.front        = front
-        this.back         = back
-        this.trunk        = trunk
-        this.trunk_stroke = trunk_stroke
-        this.grains       = grains
-        // keep a copy of our canvas context for local manipulations
-        this.context = context
+    constructor(kwargs) {
+        for (let k in kwargs) {
+            this[k] = kwargs[k]
+        }
     }
 
     // Fill in a pixel on the canvas

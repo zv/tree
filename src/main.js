@@ -4,26 +4,40 @@ import {Tree} from './tree.js'
 
 var canvas = document.getElementById('tree');
 
-const PI = Math.PI
-const size  = canvas.width
-const one   = 1/size
+export var config = {
+    size: canvas.width,
+    mid: 0.5,
+    branch_split_diminish: 0.71,
+    branch_split_angle: 0.3*Math.PI,
+    branch_angle_exp: 2,
+    trunk_stroke: "black",
+    trunk: "white",
+    trunk_shade: "rgba(0,0,0,0.5)",
 
-const mid = 0.5
-const init_branch = size*0.03*one
-const grains = Math.floor(size*0.02)
+    get init_branch() {
+        return this.size * 0.03 * this.one
+    },
 
-const branch_diminish       = one/32
-const branch_split_diminish = 0.71
-const branch_prob_scale     = 1/(init_branch)/size*18
-const branch_split_angle    = 0.3*PI
-const branch_angle_max      = 5*PI/size
-const branch_angle_exp      = 2
+    get branch_angle_max() {
+        return 5*Math.PI / this.size
+    },
 
-const back         = "rgba(255,255,255,0)"
-const front        = "rgba(0,0,0,0.5)"
-const trunk_stroke = "rgba(0,0,0,1)"
-const trunk        = "rgba(255,255,255,1)"
-const trunk_shade  = "rgba(0,0,0,0.5)"
+    get grains() {
+        return Math.ceil(this.size*0.02)
+    },
+
+    get branch_diminish() {
+        return this.one / 32
+    },
+
+    get one() {
+        return 1/this.size
+    },
+
+    get branch_prob_scale() {
+        return 1/this.init_branch/this.size*18
+    }
+}
 
 
 export function draw() {
@@ -34,20 +48,26 @@ export function draw() {
         return
     }
 
-    var render = new RenderTree(size, front, back, trunk, trunk_stroke, grains, ctx)
+    var render = new RenderTree({n: config.size,
+                                 trunk: config.trunk,
+                                 trunk_stroke: config.trunk_stroke,
+                                 grains: config.grains,
+                                 one: 1, // scaling factor
+                                 context: ctx})
 
-    var tree = new Tree(mid,
-                        0.90,
-                        init_branch,
-                        (-1*PI)*0.5,
-                        one,
-                        one,
-                        branch_split_angle,
-                        branch_prob_scale,
-                        branch_diminish,
-                        branch_split_diminish,
-                        branch_angle_max,
-                        branch_angle_exp)
+    var tree = new Tree({root_x: config.mid,
+                         root_y: 0.90,
+                         root_r: config.init_branch,
+                         root_a: (-1*Math.PI)*0.5,
+                         stepsize: config.one,
+                         one: config.one,
+                         branch_split_angle: config.branch_split_angle,
+                         branch_prob_scale: config.branch_prob_scale,
+                         branch_diminish: config.branch_diminish,
+                         branch_split_diminish: config.branch_split_diminish,
+                         branch_angle_max: config.branch_angle_max,
+                         branch_angle_exp: config.branch_angle_exp})
+    debugger
 
     function drawStep() {
         tree.step()
