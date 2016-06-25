@@ -42,7 +42,7 @@ export class RenderTree {
 
         // Make our line white & one pixel wide
         ctx.strokeStyle = this.trunk
-        ctx.lineWidth = 1
+        ctx.lineWidth = 2
         this.fillLine(
             {x: x1, y: y1}, // start
             {x: x2, y: y2}  // end
