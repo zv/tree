@@ -45,7 +45,7 @@ export function draw() {
         var ctx = canvas.getContext('2d');
     } else {
         console.log("No canvas")
-        return
+        return -1;
     }
 
     var render = new RenderTree({n: config.size,
