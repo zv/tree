@@ -1,4 +1,4 @@
-import {PI, square, zip} from './utils.js'
+import {PI, square, zip, randomInteger} from './utils.js'
 
 export class RenderTree {
     constructor(kwargs) {

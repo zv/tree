@@ -22,6 +22,6 @@ module.exports = {
     // Create Sourcemaps for the bundle
     devtool: 'source-map',
     devServer: {
-        contentBase: dir_build,
-    }
+        contentBase: dir_build
+    },
 };
