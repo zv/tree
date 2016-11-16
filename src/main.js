@@ -72,14 +72,13 @@ export function draw() {
                          branch_split_diminish: config.branch_split_diminish,
                          branch_angle_max: config.branch_angle_max,
                          branch_angle_exp: config.branch_angle_exp})
-    debugger
 
     function drawStep() {
         tree.step()
         tree.Q.map(render.drawBranch.bind(render))
 
         if (tree.Q.length) {
-            setTimeout(drawStep, 10)
+            requestAnimationFrame(drawStep)
         } else {
             console.log("done")
         }
