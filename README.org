@@ -4,7 +4,7 @@ A port of inconvergent trees
 
   [[https://github.com/zv/tree/blob/master/tree/README.org][file:screenshot.png]]
 
-You can view it in action here: http://zv.github.io/algorithmic-tree.html
+You can view it in action here: [[https://zv.github.io/static/algorithmic-tree.html]]
 
 *** Things Like This
 - http://www.complexification.net/gallery/machines/treeGarden/
