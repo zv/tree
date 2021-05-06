@@ -5,16 +5,13 @@
   "main": "bundle.js",
   "dependencies": {},
   "devDependencies": {
-    "babel-loader": "^6.2.4",
-    "babel-polyfill": "^6.9.1",
-    "babel-preset-es2015": "^6.9.0",
-    "webpack": "^1.13.1",
-    "webpack-dev-server": "^1.14.1"
-  },
-  "scripts": {
-    "build": "webpack --optimize-minimize",
-    "watch": "webpack --watch",
-    "start": "webpack-dev-server --hot --inline"
+    "@babel/core": "^7.14.0",
+    "@babel/polyfill": "^7.12.1",
+    "@babel/preset-env": "^7.14.1",
+    "babel-loader": "^8.2.2",
+    "webpack": "^5.36.2",
+    "webpack-cli": "^4.7.0",
+    "webpack-dev-server": "^3.11.2"
   },
   "babel": {
     "presets": [
