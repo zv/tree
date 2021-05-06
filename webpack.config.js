@@ -1,15 +1,23 @@
 require('@babel/polyfill');
 var path = require('path');
-var dir_js = path.resolve(__dirname, 'src');
 var dir_build = path.resolve(__dirname, 'build');
 
 module.exports = {
-    entry: path.resolve(dir_js, 'main.js'),
+    entry: path.resolve(__dirname, './src/main.js'),
     output: {
         libraryTarget: 'var',
         library: 'ZVTree',
         path: dir_build,
         filename: 'zv-tree.js'
+    },
+    module: {
+        rules: [
+            {
+                test: /\.(js)$/,
+                exclude: /node_modules/,
+                use: ['babel-loader'],
+            }
+        ]
     },
     // Create Sourcemaps for the bundle
     devtool: 'source-map',
