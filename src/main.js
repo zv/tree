@@ -1,4 +1,3 @@
-import '@babel/polyfill';
 import {RenderTree} from './render.js'
 import {Tree} from './tree.js'
 

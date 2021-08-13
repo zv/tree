@@ -1,4 +1,3 @@
-require('@babel/polyfill');
 var path = require('path');
 var dir_build = path.resolve(__dirname, 'build');
 
