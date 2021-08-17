@@ -33,9 +33,7 @@ class Branch {
 
     draw(context) {
         const { a, r, x, y } = this
-
         const scale = this.tree.n
-
         const x1 = x + Math.cos(a - 0.5 * Math.PI) * r,
             x2 = x + Math.cos(a + 0.5 * Math.PI) * r,
             y1 = y + Math.sin(a - 0.5 * Math.PI) * r,
@@ -48,12 +46,8 @@ class Branch {
         ctx.lineWidth = 2
         ctx.fillStyle = this.tree.trunk_stroke
 
-        // Fill in a pixel on the canvas
         const fillPixel = (x, y) => fillRectN(x, y, 1)
-
-        // Fill in a square of size N
         const fillRectN = (x, y, n) => ctx.fillRect(x * scale, y * scale, n, n)
-
         const fillLine = (start, end) => {
             ctx.beginPath()
             ctx.moveTo(scale * start.x, scale * start.y)
@@ -61,12 +55,8 @@ class Branch {
             ctx.stroke()
         }
 
-        fillLine(
-            { x: x1, y: y1 }, // start
-            { x: x2, y: y2 } // end
-        )
-
         // Create our outline
+        fillLine({ x: x1, y: y1 }, { x: x2, y: y2 })
         fillPixel(x1, y1)
         fillPixel(x2, y2)
 
@@ -132,8 +122,7 @@ export class Tree {
                 continue
             }
 
-            let branch_prob =
-                (this.root_r - branch.r + this.one) * this.branch_prob_scale
+            let branch_prob = (this.root_r - branch.r + this.one) * this.branch_prob_scale
 
             // Now, roll the dice and create a new branch if we're lucky
             if (uniformRandom() < branch_prob) {
@@ -159,10 +148,9 @@ export class Tree {
             }
         }
 
-        q_remove.reverse()
-
-        for (let r of q_remove) {
-            this.Q.splice(r, 1)
+        // remove each elt in `q_remove` in opposite order we added them in
+        for (let r = q_remove.length - 1; r >= 0; r--) {
+            this.Q.splice(q_remove[r], 1)
         }
 
         this.Q = this.Q.concat(q_new)
