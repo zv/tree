@@ -69,11 +69,10 @@ export function draw() {
     ctx.strokeStyle = tree.trunk
 
     function drawStep() {
-        tree.step()
-        tree.draw(ctx)
-
         if (tree.Q.length) {
             requestAnimationFrame(drawStep)
+            tree.step()
+            tree.draw(ctx)
         }
     }
 
