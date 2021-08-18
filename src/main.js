@@ -64,6 +64,9 @@ export function draw() {
         trunk_stroke: config.trunk_stroke,
         grains: config.grains,
     })
+    ctx.fillStyle = tree.trunk_stroke
+    ctx.lineWidth = 2
+    ctx.strokeStyle = tree.trunk
 
     function drawStep() {
         tree.step()

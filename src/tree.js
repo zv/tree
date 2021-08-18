@@ -1,6 +1,5 @@
 const square = (n) => Math.pow(n, 2)
 const randomInteger = (n) => Math.floor(Math.random() * n)
-const uniformRandom = (n) => (n ? randomInteger(n) : Math.random())
 const normalDistribution = () => {
     var u = 1 - Math.random() // Subtraction to flip [0, 1) to (0, 1].
     var v = 1 - Math.random()
@@ -39,49 +38,35 @@ class Branch {
             y1 = y + Math.sin(a - 0.5 * Math.PI) * r,
             y2 = y + Math.sin(a + 0.5 * Math.PI) * r
 
-        const fillRectN = (x, y, n) => ctx.fillRect(x * scale, y * scale, n, n)
-        const fillPixel = (x, y) => fillRectN(x, y, 1)
+        // Make our line white & one pixel wide
         const fillLine = (start, end) => {
             ctx.beginPath()
             ctx.moveTo(scale * start.x, scale * start.y)
             ctx.lineTo(scale * end.x, scale * end.y)
             ctx.stroke()
         }
-
-        // Make our line white & one pixel wide
-        ctx.strokeStyle = this.tree.trunk
-        ctx.lineWidth = 2
         fillLine({ x: x1, y: y1 }, { x: x2, y: y2 })
 
         // Create our outline
-        ctx.fillStyle = this.tree.trunk_stroke
+        const fillPixel = (x, y) => ctx.fillRect(x * scale, y * scale, 1, 1)
         fillPixel(x1, y1)
         fillPixel(x2, y2)
 
-        const makeTrunk = (xl, yl, the, dd, len) => {
+        // shade the trunk of this branch
+        const makeTrunk = (xl, yl, the, len) => {
+            let dd = Math.sqrt(square(x - xl) + square(y - yl))
+
             for (let i = 0; i <= len; i++) {
                 let s = Math.random() * Math.random() * dd
                 fillPixel(xl - s * Math.cos(the), yl - s * Math.sin(the))
             }
         }
 
-        // Trunk shade right
-        makeTrunk(
-            x2,
-            y2,
-            0.5 * Math.PI + a,
-            Math.sqrt(square(x - x2) + square(y - y2)),
-            this.tree.grains
-        )
+        // left trunk
+        makeTrunk(x1, y1, a - 0.5 * Math.PI, this.tree.grains / 5)
 
-        // Trunk shade left
-        makeTrunk(
-            x1,
-            y1,
-            a - 0.5 * Math.PI,
-            Math.sqrt(square(x - x1) + square(y - y1)),
-            this.tree.grains / 5
-        )
+        // right trunk
+        makeTrunk(x2, y2, 0.5 * Math.PI + a, this.tree.grains)
     }
 }
 
@@ -121,8 +106,8 @@ export class Tree {
 
             // Now, roll the dice and create a new branch if we're lucky
             let branch_prob = this.root_r - branch.r + this.one
-            if (uniformRandom() < branch_prob * this.branch_prob_scale) {
-                let ra = Math.pow(-1, randomInteger(2)) * uniformRandom()
+            if (Math.random() < branch_prob * this.branch_prob_scale) {
+                let ra = Math.pow(-1, randomInteger(2)) * Math.random()
                 q_new.push(
                     new Branch({
                         tree: this,
@@ -150,6 +135,12 @@ export class Tree {
     }
 
     draw(ctx) {
-        this.Q.map((branch) => branch.draw(ctx))
+        ctx.lineWidth = 2
+        ctx.strokeStyle = this.trunk
+        ctx.fillStyle = this.trunk_stroke
+
+        for (let branch of this.Q) {
+            branch.draw(ctx)
+        }
     }
 }
