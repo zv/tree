@@ -10,8 +10,11 @@ export var config = {
     trunk_stroke: 'black',
     trunk: 'white',
     trunk_shade: 'rgba(0,0,0,0.5)',
-    size: canvas.width,
     init_branch: 0.03,
+
+    get size() {
+        return canvas.width
+    },
 
     get branch_angle_max() {
         return (5 * Math.PI) / this.size
