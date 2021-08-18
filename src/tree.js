@@ -1,4 +1,4 @@
-const square = (n) => n * n
+const square = (n) => Math.pow(n, 2)
 const randomInteger = (n) => Math.floor(Math.random() * n)
 const uniformRandom = (n) => (n ? randomInteger(n) : Math.random())
 const normalDistribution = () => {
@@ -31,7 +31,7 @@ class Branch {
         this.y += dy
     }
 
-    draw(context) {
+    draw(ctx) {
         const { a, r, x, y } = this
         const scale = this.tree.n
         const x1 = x + Math.cos(a - 0.5 * Math.PI) * r,
@@ -39,15 +39,8 @@ class Branch {
             y1 = y + Math.sin(a - 0.5 * Math.PI) * r,
             y2 = y + Math.sin(a + 0.5 * Math.PI) * r
 
-        let ctx = context
-
-        // Make our line white & one pixel wide
-        ctx.strokeStyle = this.tree.trunk
-        ctx.lineWidth = 2
-        ctx.fillStyle = this.tree.trunk_stroke
-
-        const fillPixel = (x, y) => fillRectN(x, y, 1)
         const fillRectN = (x, y, n) => ctx.fillRect(x * scale, y * scale, n, n)
+        const fillPixel = (x, y) => fillRectN(x, y, 1)
         const fillLine = (start, end) => {
             ctx.beginPath()
             ctx.moveTo(scale * start.x, scale * start.y)
@@ -55,8 +48,13 @@ class Branch {
             ctx.stroke()
         }
 
-        // Create our outline
+        // Make our line white & one pixel wide
+        ctx.strokeStyle = this.tree.trunk
+        ctx.lineWidth = 2
         fillLine({ x: x1, y: y1 }, { x: x2, y: y2 })
+
+        // Create our outline
+        ctx.fillStyle = this.tree.trunk_stroke
         fillPixel(x1, y1)
         fillPixel(x2, y2)
 
@@ -71,18 +69,18 @@ class Branch {
         makeTrunk(
             x2,
             y2,
-            0.5 * Math.PI + a, // val
-            Math.sqrt(square(x - x2) + square(y - y2)), // dd
-            this.tree.grains // len
+            0.5 * Math.PI + a,
+            Math.sqrt(square(x - x2) + square(y - y2)),
+            this.tree.grains
         )
 
         // Trunk shade left
         makeTrunk(
             x1,
             y1,
-            a - 0.5 * Math.PI, // val
-            Math.sqrt(square(x - x1) + square(y - y1)), // dd
-            this.tree.grains / 5 // len
+            a - 0.5 * Math.PI,
+            Math.sqrt(square(x - x1) + square(y - y1)),
+            this.tree.grains / 5
         )
     }
 }
@@ -103,7 +101,6 @@ export class Tree {
             g: 0,
         })
         this.Q.push(branch)
-        console.log(this)
     }
 
     /*
@@ -122,22 +119,17 @@ export class Tree {
                 continue
             }
 
-            let branch_prob = (this.root_r - branch.r + this.one) * this.branch_prob_scale
-
             // Now, roll the dice and create a new branch if we're lucky
-            if (uniformRandom() < branch_prob) {
-                let ra =
-                    Math.pow(-1, randomInteger(2)) *
-                    uniformRandom() *
-                    this.branch_split_angle
-
+            let branch_prob = this.root_r - branch.r + this.one
+            if (uniformRandom() < branch_prob * this.branch_prob_scale) {
+                let ra = Math.pow(-1, randomInteger(2)) * uniformRandom()
                 q_new.push(
                     new Branch({
                         tree: this,
                         x: branch.x,
                         y: branch.y,
-                        r: this.branch_split_diminish * branch.r,
-                        a: branch.a + ra,
+                        r: branch.r * this.branch_split_diminish,
+                        a: branch.a + ra * this.branch_split_angle,
                         g: branch.g + 1,
                     })
                 )
@@ -148,15 +140,16 @@ export class Tree {
             }
         }
 
-        // remove each elt in `q_remove` in opposite order we added them in
-        for (let r = q_remove.length - 1; r >= 0; r--) {
-            this.Q.splice(q_remove[r], 1)
+        q_remove.reverse()
+
+        for (let r of q_remove) {
+            this.Q.splice(r, 1)
         }
 
         this.Q = this.Q.concat(q_new)
     }
 
-    draw(context) {
-        this.Q.map((branch) => branch.draw(context))
+    draw(ctx) {
+        this.Q.map((branch) => branch.draw(ctx))
     }
 }

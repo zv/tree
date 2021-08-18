@@ -3,7 +3,6 @@ import { Tree } from './tree.js'
 var canvas = document.getElementById('tree')
 
 export var config = {
-    _size: null,
     mid: 0.5,
     branch_split_diminish: 0.71,
     branch_split_angle: 0.3 * Math.PI,
@@ -11,15 +10,8 @@ export var config = {
     trunk_stroke: 'black',
     trunk: 'white',
     trunk_shade: 'rgba(0,0,0,0.5)',
-
-    get size() {
-        // lame
-        return this._size || canvas.width
-    },
-
-    get init_branch() {
-        return this.size * 0.03 * this.one
-    },
+    size: canvas.width,
+    init_branch: 0.03,
 
     get branch_angle_max() {
         return (5 * Math.PI) / this.size
@@ -38,7 +30,7 @@ export var config = {
     },
 
     get branch_prob_scale() {
-        return (1 / this.init_branch / this.size) * 18
+        return (this.one / this.init_branch) * 18
     },
 }
 
@@ -76,8 +68,6 @@ export function draw() {
 
         if (tree.Q.length) {
             requestAnimationFrame(drawStep)
-        } else {
-            console.log('done')
         }
     }
 
