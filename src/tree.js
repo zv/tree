@@ -1,145 +1,129 @@
-const square = (n) => Math.pow(n, 2)
 const randomInteger = (n) => Math.floor(Math.random() * n)
 const normalDistribution = () => {
     var u = 1 - Math.random() // Subtraction to flip [0, 1) to (0, 1].
     var v = 1 - Math.random()
     return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v)
 }
+const halfPi = Math.PI / 2
 
 class Branch {
-    constructor(kwargs) {
-        for (let k in kwargs) this[k] = kwargs[k]
+    constructor(x, y, r, a, g, scale, grains) {
+        this.x = x
+        this.y = y
+        this.r = r
+        this.a = a
+        this.g = g
+        this.grains = grains
+        this.scale = scale
     }
 
-    step() {
-        this.r -= this.tree.branch_diminish
-        const angle = normalDistribution() * this.tree.branch_angle_max
-        const scale = this.tree.one + this.tree.root_r - this.r
-
-        // Calculate our Thue path and...
-        const da = Math.pow(
-            1 + scale / this.tree.root_r,
-            this.tree.branch_angle_exp
-        )
-        const dx = Math.cos(this.a) * this.tree.stepsize
-        const dy = Math.sin(this.a) * this.tree.stepsize
-
-        // Increment
-        this.a += da * angle
-        this.x += dx
-        this.y += dy
+    step(vw, root_r, stepSize, branchAngleMax, branchDiminish, branchAngleExp) {
+        this.r -= branchDiminish
+        this.x += Math.cos(this.a) * stepSize
+        this.y += Math.sin(this.a) * stepSize
+        const da = Math.pow(1 + (vw + root_r - this.r) / root_r, branchAngleExp)
+        this.a += da * normalDistribution() * branchAngleMax
     }
 
     draw(ctx) {
-        const { a, r, x, y } = this
-        const scale = this.tree.n
-        const x1 = x + Math.cos(a - 0.5 * Math.PI) * r,
-            x2 = x + Math.cos(a + 0.5 * Math.PI) * r,
-            y1 = y + Math.sin(a - 0.5 * Math.PI) * r,
-            y2 = y + Math.sin(a + 0.5 * Math.PI) * r
+        const { a, r, x, y, scale, grains } = this
+        const left = [Math.cos(a + halfPi), Math.sin(a + halfPi)]
+        const right = [Math.cos(a - halfPi), Math.sin(a - halfPi)]
+        const branchScale = (a) => a * r * scale
 
-        // Make our line white & one pixel wide
-        const fillLine = (start, end) => {
-            ctx.beginPath()
-            ctx.moveTo(scale * start.x, scale * start.y)
-            ctx.lineTo(scale * end.x, scale * end.y)
-            ctx.stroke()
-        }
-        fillLine({ x: x1, y: y1 }, { x: x2, y: y2 })
+        ctx.save()
+        ctx.translate(x * scale, y * scale)
 
-        // Create our outline
-        const fillPixel = (x, y) => ctx.fillRect(x * scale, y * scale, 1, 1)
-        fillPixel(x1, y1)
-        fillPixel(x2, y2)
+        // clear interior of trunk
+        ctx.beginPath()
+        ctx.moveTo(...left.map(branchScale))
+        ctx.lineTo(...right.map(branchScale))
+        ctx.stroke()
+        ctx.closePath()
 
-        // shade the trunk of this branch
-        const makeTrunk = (xl, yl, the, len) => {
-            let dd = Math.sqrt(square(x - xl) + square(y - yl))
+        const shadeTrunk = (x, y, len) => {
+            const dd = Math.hypot(x, y)
 
             for (let i = 0; i <= len; i++) {
-                let s = Math.random() * Math.random() * dd
-                fillPixel(xl - s * Math.cos(the), yl - s * Math.sin(the))
+                const stretch =
+                    branchScale(dd * Math.random() * Math.random()) - r * scale
+                ctx.fillRect(x * stretch, y * stretch, 1, 1)
             }
         }
 
-        // left trunk
-        makeTrunk(x1, y1, a - 0.5 * Math.PI, this.tree.grains / 5)
-
         // right trunk
-        makeTrunk(x2, y2, 0.5 * Math.PI + a, this.tree.grains)
+        ctx.fillRect(...right.map(branchScale), 1, 1)
+        shadeTrunk(...right, grains)
+
+        // left trunk
+        ctx.fillRect(...left.map(branchScale), 1, 1)
+        shadeTrunk(...left, grains / 5)
+
+        ctx.restore()
     }
 }
 
 export class Tree {
     constructor(kwargs) {
-        for (let k in kwargs) {
+        for (const k in kwargs) {
             this[k] = kwargs[k]
         }
 
-        this.Q = [] // All of the tree's branches
-        let branch = new Branch({
-            tree: this,
-            x: this.root_x,
-            y: this.root_y,
-            r: this.root_r,
-            a: this.root_a,
-            g: 0,
-        })
-        this.Q.push(branch)
+        // All of the tree's branches
+        this.Q = [
+            new Branch(
+                this.root_x,
+                this.root_y,
+                this.root_r,
+                this.root_a,
+                0,
+                this.n,
+                this.grains
+            ),
+        ]
     }
 
-    /*
-     * Generate the next iteration of the Tree's growth
-     */
     step() {
-        var q_remove = [] // What we will prune
-        var q_new = [] // Any new branches we might grow
+        for (let i = this.Q.length - 1; i >= 0; --i) {
+            const branch = this.Q[i]
 
-        for (let [i, branch] of this.Q.entries()) {
-            branch.step() // Grow our branch
+            // Grow our branch
+            branch.step(
+                this.one,
+                this.root_r,
+                this.stepsize,
+                this.branch_angle_max,
+                this.branch_diminish,
+                this.branch_angle_exp
+            )
 
+            // And get rid of it if it is too small
             if (branch.r <= this.one) {
-                // And get rid of it if it is too small
-                q_remove.push(i)
+                this.Q.splice(i, 1)
                 continue
             }
 
             // Now, roll the dice and create a new branch if we're lucky
-            let branch_prob = this.root_r - branch.r + this.one
+            const branch_prob = this.root_r - branch.r + this.one
             if (Math.random() < branch_prob * this.branch_prob_scale) {
-                let ra = Math.pow(-1, randomInteger(2)) * Math.random()
-                q_new.push(
-                    new Branch({
-                        tree: this,
-                        x: branch.x,
-                        y: branch.y,
-                        r: branch.r * this.branch_split_diminish,
-                        a: branch.a + ra * this.branch_split_angle,
-                        g: branch.g + 1,
-                    })
+                const ra = Math.pow(-1, randomInteger(2)) * Math.random()
+                this.Q.push(
+                    new Branch(
+                        branch.x,
+                        branch.y,
+                        branch.r * this.branch_split_diminish,
+                        branch.a + ra * this.branch_split_angle,
+                        branch.g + 1,
+                        this.n,
+                        this.grains
+                    )
                 )
-            } else {
-                // Otherwise just keep growing our branch!
-                q_remove.push(i)
-                q_new.push(branch)
             }
         }
-
-        q_remove.reverse()
-
-        for (let r of q_remove) {
-            this.Q.splice(r, 1)
-        }
-
-        this.Q = this.Q.concat(q_new)
     }
 
     draw(ctx) {
-        ctx.lineWidth = 2
-        ctx.strokeStyle = this.trunk
-        ctx.fillStyle = this.trunk_stroke
-
-        for (let branch of this.Q) {
+        for (const branch of this.Q) {
             branch.draw(ctx)
         }
     }
