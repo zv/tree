@@ -27,36 +27,40 @@ class Branch {
 
     draw(ctx) {
         const { a, r, x, y, scale, grains } = this
-        const left = [Math.cos(a + halfPi), Math.sin(a + halfPi)]
-        const right = [Math.cos(a - halfPi), Math.sin(a - halfPi)]
-        const branchScale = (a) => a * r * scale
+        const left  = [Math.cos(a + halfPi), Math.sin(a + halfPi)],
+              right = [Math.cos(a - halfPi), Math.sin(a - halfPi)]
+        const scaleAbsolute = a => a * r * scale
+        const absoluteLeft  = left.map(scaleAbsolute),
+              absoluteRight = right.map(scaleAbsolute)
 
-        ctx.save()
-        ctx.translate(x * scale, y * scale)
-
-        // clear interior of trunk
-        ctx.beginPath()
-        ctx.moveTo(...left.map(branchScale))
-        ctx.lineTo(...right.map(branchScale))
-        ctx.stroke()
-        ctx.closePath()
+        const clearTrunk = () => {
+            ctx.beginPath()
+            ctx.moveTo(...absoluteLeft)
+            ctx.lineTo(...absoluteRight)
+            ctx.stroke()
+            ctx.closePath()
+        }
 
         const shadeTrunk = (x, y, len) => {
             const dd = Math.hypot(x, y)
-
             for (let i = 0; i <= len; i++) {
-                const stretch =
-                    branchScale(dd * Math.random() * Math.random()) - r * scale
+                const stretch = scaleAbsolute(dd * Math.random() * Math.random()) - r * scale
                 ctx.fillRect(x * stretch, y * stretch, 1, 1)
             }
         }
 
-        // right trunk
-        ctx.fillRect(...right.map(branchScale), 1, 1)
+        ctx.save()
+        ctx.translate(x * scale, y * scale)
+
+        // fill interior of trunk with white (`fillStyle')
+        clearTrunk()
+
+        // draw right side of the branch
+        ctx.fillRect(...absoluteRight, 1, 1)
         shadeTrunk(...right, grains)
 
-        // left trunk
-        ctx.fillRect(...left.map(branchScale), 1, 1)
+        // draw left side of the branch
+        ctx.fillRect(...absoluteLeft, 1, 1)
         shadeTrunk(...left, grains / 5)
 
         ctx.restore()
