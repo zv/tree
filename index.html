@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8"/>
     <title>Zephyr's Tree</title>
-  </head>
-  <body onload="ZVTree.draw();">
-    <canvas id="tree" width="700" height="700"></canvas>
     <script type="text/javascript" src="./build/zv-tree.js"></script>
+  </head>
+  <body onload="ZVTree.draw(document.getElementById('tree'));">
+    <canvas id="tree" width="700" height="700"></canvas>
   </body>
 </html>
