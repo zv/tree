@@ -13,7 +13,7 @@ export class Tree {
     this.r = r
     this.a = a
     this.stepSize = stepSize
-    this.branchProbScale = branchProbScale
+    this.branchProb = one * branchProbScale
     this.one = one
 
     // list of branchs
@@ -34,8 +34,7 @@ export class Tree {
       }
 
       // Now, roll the dice and create a new branch if we're lucky
-      const branchProb = this.r - branch.r + this.one * this.branchProbScale
-      if (Math.random() < branchProb) {
+      if (Math.random() < (this.r - branch.r + this.branchProb)) {
         this.Q.push(branch.split())
       }
     }
