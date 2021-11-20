@@ -6,6 +6,48 @@ const normalDistribution = () => {
 }
 export const quarterTurnAngle = Math.PI / 2
 
+export class Tree {
+  constructor (x, y, r, a, stepSize, one, n, grains, branchSplitAngle, branchProbScale, branchDiminish, branchSplitDiminish, branchAngleMax, branchAngleExp) {
+    this.x = x
+    this.y = y
+    this.r = r
+    this.a = a
+    this.stepSize = stepSize
+    this.branchProbScale = branchProbScale
+    this.one = one
+
+    // list of branchs
+    this.Q = [new Branch(x, y, r, a, 0, n, branchAngleMax, branchDiminish, branchAngleExp, branchSplitDiminish, branchSplitAngle, grains)]
+  }
+
+  step () {
+    for (let i = this.Q.length - 1; i >= 0; --i) {
+      const branch = this.Q[i]
+
+      // Grow our branch
+      branch.step(this.one, this.r, this.stepSize)
+
+      // And get rid of it if it is too small
+      if (branch.r <= this.one) {
+        this.Q.splice(i, 1)
+        continue
+      }
+
+      // Now, roll the dice and create a new branch if we're lucky
+      const branchProb = this.r - branch.r + this.one * this.branchProbScale
+      if (Math.random() < branchProb) {
+        this.Q.push(branch.split())
+      }
+    }
+  }
+
+  draw (ctx) {
+    for (const branch of this.Q) {
+      branch.draw(ctx)
+    }
+  }
+}
+
 class Branch {
   constructor (x, y, r, a, g, scale, branchAngleMax, branchDiminish, branchAngleExp, branchSplitDiminish, branchSplitAngle, grains) {
     this.x = x
@@ -42,7 +84,6 @@ class Branch {
 
     const shadeTrunk = (x, y, len) => {
       const dd = Math.hypot(x, y)
-
       for (let i = 0; i <= len; i++) {
         const ts = scaleAbsolute(dd * Math.random() * Math.random()) - r * scale
         fillPixel(x * ts, y * ts)
@@ -87,47 +128,5 @@ class Branch {
       this.branchSplitAngle,
       this.grains
     )
-  }
-}
-
-export class Tree {
-  constructor (x, y, r, a, stepSize, one, n, grains, branchSplitAngle, branchProbScale, branchDiminish, branchSplitDiminish, branchAngleMax, branchAngleExp) {
-    this.x = x
-    this.y = y
-    this.r = r
-    this.a = a
-    this.stepSize = stepSize
-    this.branchProbScale = branchProbScale
-    this.one = one
-
-    // list of branchs
-    this.Q = [new Branch(x, y, r, a, 0, n, branchAngleMax, branchDiminish, branchAngleExp, branchSplitDiminish, branchSplitAngle, grains)]
-  }
-
-  step () {
-    for (let i = this.Q.length - 1; i >= 0; --i) {
-      const branch = this.Q[i]
-
-      // Grow our branch
-      branch.step(this.one, this.r, this.stepSize)
-
-      // And get rid of it if it is too small
-      if (branch.r <= this.one) {
-        this.Q.splice(i, 1)
-        continue
-      }
-
-      // Now, roll the dice and create a new branch if we're lucky
-      const branchProb = this.r - branch.r + this.one * this.branchProbScale
-      if (Math.random() < branchProb) {
-        this.Q.push(branch.split())
-      }
-    }
-  }
-
-  draw (ctx) {
-    for (const branch of this.Q) {
-      branch.draw(ctx)
-    }
   }
 }
