@@ -7,13 +7,13 @@ const normalDistribution = () => {
 export const quarterTurnAngle = Math.PI / 2
 
 export class Tree {
-  constructor (x, y, r, a, stepSize, one, n, grains, branchSplitAngle, branchProbScale, branchDiminish, branchSplitDiminish, branchAngleMax, branchAngleExp) {
+  constructor (x, y, r, a, stepSize, one, n, grains, branchSplitAngle, branchProb, branchDiminish, branchSplitDiminish, branchAngleMax, branchAngleExp) {
     this.x = x
     this.y = y
     this.r = r
     this.a = a
     this.stepSize = stepSize
-    this.branchProb = one * branchProbScale
+    this.branchProb = branchProb
     this.one = one
 
     // list of branchs
@@ -79,6 +79,7 @@ class Branch {
     const absoluteLeft = left.map(scaleAbsolute)
     const absoluteRight = right.map(scaleAbsolute)
 
+    // set a single pixel at (X, Y) the color of `fillStyle'
     const fillPixel = (x, y) => ctx.fillRect(x, y, 1, 1)
 
     const shadeTrunk = (x, y, len) => {
@@ -92,7 +93,7 @@ class Branch {
     ctx.save()
     ctx.translate(x * scale, y * scale)
 
-    // fill interior of trunk with white (`fillStyle')
+    // fill interior of trunk with the color of `strokeStyle'
     ctx.beginPath()
     ctx.moveTo(...absoluteLeft)
     ctx.lineTo(...absoluteRight)

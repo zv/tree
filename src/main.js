@@ -1,14 +1,14 @@
 import { Tree, quarterTurnAngle } from './tree.js'
 
 const defaultConfig = (canvas) => ({
-  mid: 0.5,
-  branchSplitDiminish: 0.725,
-  branchSplitAngle: Math.PI / 4,
   branchAngleExp: 2,
-  trunk_stroke: 'black',
-  trunk: 'white',
-  trunk_shade: 'rgba(0,0,0,0.5)',
+  branchSplitAngle: Math.PI / 4,
+  branchSplitDiminish: 0.725,
   initBranch: 1 / 32,
+  mid: 0.5,
+  fillStyle: 'black',
+  lineWidth: 2,
+  strokeStyle: 'white',
 
   get size () {
     return canvas.width
@@ -30,47 +30,48 @@ const defaultConfig = (canvas) => ({
     return 1 / this.size
   },
 
-  get branchProbScale () {
-    return (this.one / this.initBranch) * 16
+  get branchProb () {
+    return this.one * (this.one / this.initBranch) * 16
   }
 })
 
 export const draw = (canvas, config = {}) => {
-  if (canvas.getContext) {
-    const ctx = canvas.getContext('2d')
-    config = { ...defaultConfig(canvas), ...config }
+  config = { ...defaultConfig(canvas), ...config }
 
-    ctx.lineWidth = 2
-    ctx.fillStyle = config.trunk_stroke
-    ctx.strokeStyle = config.trunk
-
-    const tree = new Tree(
-      config.mid,
-      1.0,
-      config.initBranch,
-      -quarterTurnAngle,
-      config.one,
-      config.one,
-      config.size,
-      config.grains,
-      config.branchSplitAngle,
-      config.branchProbScale,
-      config.branchDiminish,
-      config.branchSplitDiminish,
-      config.branchAngleMax,
-      config.branchAngleExp
-    )
-
-    const drawStep = () => {
-      if (tree.Q.length > 0) {
-        tree.step()
-        tree.draw(ctx)
-        window.requestAnimationFrame(drawStep)
-      }
-    }
-
-    window.requestAnimationFrame(drawStep)
-  } else {
+  if (!canvas.getContext) {
     throw new Error('Could not get canvas context')
   }
+
+  const ctx = canvas.getContext('2d')
+
+  ctx.fillStyle = config.fillStyle
+  ctx.lineWidth = config.lineWidth
+  ctx.strokeStyle = config.strokeStyle
+
+  const tree = new Tree(
+    config.mid,
+    1.0,
+    config.initBranch,
+    -quarterTurnAngle,
+    config.one,
+    config.one,
+    config.size,
+    config.grains,
+    config.branchSplitAngle,
+    config.branchProb,
+    config.branchDiminish,
+    config.branchSplitDiminish,
+    config.branchAngleMax,
+    config.branchAngleExp
+  )
+
+  const drawStep = () => {
+    if (tree.Q.length > 0) {
+      tree.step()
+      tree.draw(ctx)
+      window.requestAnimationFrame(drawStep)
+    }
+  }
+
+  drawStep()
 }
