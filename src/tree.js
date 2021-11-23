@@ -1,4 +1,3 @@
-const randomInteger = (n) => Math.floor(Math.random() * n)
 const normalDistribution = () => {
   const u = 1 - Math.random() // Subtraction to flip [0, 1) to (0, 1].
   const v = 1 - Math.random()
@@ -112,7 +111,8 @@ class Branch {
   }
 
   split () {
-    const ra = Math.pow(-1, randomInteger(2)) * Math.random()
+    // random value between -1..1
+    const ra = (Math.random() * 2) - 1
 
     return new Branch(
       this.x,
