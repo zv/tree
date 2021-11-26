@@ -71,7 +71,7 @@ class Branch {
   }
 
   draw (ctx) {
-    const { a, r, x, y, scale, grains } = this
+    const { a, r, scale, grains } = this
     const left = [Math.cos(a + quarterTurnAngle), Math.sin(a + quarterTurnAngle)]
     const right = [Math.cos(a - quarterTurnAngle), Math.sin(a - quarterTurnAngle)]
     const scaleAbsolute = (a) => a * r * scale
@@ -84,13 +84,13 @@ class Branch {
     const shadeTrunk = (x, y, len) => {
       const dd = Math.hypot(x, y)
       for (let i = 0; i <= len; i++) {
-        const ts = scaleAbsolute(dd * Math.random() * Math.random()) - r * scale
+        const ts = scaleAbsolute(dd * Math.random() * Math.random() - 1)
         fillPixel(x * ts, y * ts)
       }
     }
 
     ctx.save()
-    ctx.translate(x * scale, y * scale)
+    ctx.translate(this.x * scale, this.y * scale)
 
     // fill interior of trunk with the color of `strokeStyle'
     ctx.beginPath()
