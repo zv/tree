@@ -89,7 +89,7 @@ class Branch {
     const { a, r, scale, grains } = this
     const left = [Math.cos(a + quarterTurnAngle), Math.sin(a + quarterTurnAngle)]
     const right = [Math.cos(a - quarterTurnAngle), Math.sin(a - quarterTurnAngle)]
-    const scaleAbsolute = (a) => a * r * scale
+    const scaleAbsolute = q => q * r * scale
     const absoluteLeft = left.map(scaleAbsolute)
     const absoluteRight = right.map(scaleAbsolute)
 
