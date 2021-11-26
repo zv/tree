@@ -34,7 +34,22 @@ export class Tree {
 
       // Now, roll the dice and create a new branch if we're lucky
       if (Math.random() < (this.r - branch.r + this.branchProb)) {
-        this.Q.push(branch.split())
+        const ra = (Math.random() * 2) - 1
+
+        this.Q.push(new Branch(
+          branch.x,
+          branch.y,
+          branch.r * branch.branchSplitDiminish,
+          branch.a + ra * branch.branchSplitAngle,
+          branch.g + 1,
+          branch.scale,
+          branch.branchAngleMax,
+          branch.branchDiminish,
+          branch.branchAngleExp,
+          branch.branchSplitDiminish,
+          branch.branchSplitAngle,
+          branch.grains
+        ))
       }
     }
   }
@@ -108,25 +123,5 @@ class Branch {
     shadeTrunk(...left, grains / 5)
 
     ctx.restore()
-  }
-
-  split () {
-    // random value between -1..1
-    const ra = (Math.random() * 2) - 1
-
-    return new Branch(
-      this.x,
-      this.y,
-      this.r * this.branchSplitDiminish,
-      this.a + ra * this.branchSplitAngle,
-      this.g + 1,
-      this.scale,
-      this.branchAngleMax,
-      this.branchDiminish,
-      this.branchAngleExp,
-      this.branchSplitDiminish,
-      this.branchSplitAngle,
-      this.grains
-    )
   }
 }
