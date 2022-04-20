@@ -1,9 +1,8 @@
 const path = require('path')
 const dirBuild = path.resolve(__dirname, 'build')
-
-module.exports = {
+var config = {
   entry: path.resolve(__dirname, './src/main.js'),
-  mode: "development",
+  mode: 'development',
   output: {
     libraryTarget: 'var',
     library: 'ZVTree',
@@ -19,9 +18,16 @@ module.exports = {
       }
     ]
   },
-  // Create Sourcemaps for the bundle
-  devtool: 'source-map',
   devServer: {
     contentBase: dirBuild
   }
 }
+
+module.exports = (env, argv) => {
+    if (argv.mode !== 'production') {
+        config.devtool = 'source-map';
+    }
+
+    return config;
+}
+
