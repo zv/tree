@@ -7,5 +7,6 @@ A port of inconvergent trees
 You can view it in action here: [[https://zv.github.io/static/algorithmic-tree.html]]
 
 *** Things Like This
-- http://www.complexification.net/gallery/machines/treeGarden/
-- http://www.fractint.org/
+- [[https://inconvergent.net/generative/trees/]]
+- [[http://www.complexification.net/gallery/machines/treeGarden/]]
+- [[http://www.fractint.org/]]

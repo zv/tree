@@ -3,6 +3,7 @@ const dirBuild = path.resolve(__dirname, 'build')
 
 module.exports = {
   entry: path.resolve(__dirname, './src/main.js'),
+  mode: "development",
   output: {
     libraryTarget: 'var',
     library: 'ZVTree',

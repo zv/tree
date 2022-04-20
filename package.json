@@ -5,13 +5,13 @@
   "main": "src/main.js",
   "dependencies": {},
   "devDependencies": {
-    "@babel/core": "^7.16.0",
-    "@babel/preset-env": "^7.16.4",
-    "babel-loader": "^8.2.3",
-    "core-js": "^3.19.1",
-    "standard": "*",
-    "webpack": "^5.64.1",
-    "webpack-cli": "^4.9.1"
+    "@babel/core": "^7.17.9",
+    "@babel/preset-env": "^7.16.11",
+    "babel-loader": "^8.2.5",
+    "core-js": "^3.22.1",
+    "standard": "^17.0.0",
+    "webpack": "^5.72.0",
+    "webpack-cli": "^4.9.2"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,9 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/zv/tree/issues"
+  },
+  "scripts": {
+    "build": "webpack build"
   },
   "homepage": "https://github.com/zv/tree#readme"
 }
