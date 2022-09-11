@@ -3,15 +3,14 @@
   "version": "1.0.0",
   "description": "Generate trees algorithmically",
   "main": "src/main.js",
-  "dependencies": {},
   "devDependencies": {
-    "@babel/core": "^7.17.9",
-    "@babel/preset-env": "^7.16.11",
+    "@babel/core": "^7.19.0",
+    "@babel/preset-env": "^7.19.0",
     "babel-loader": "^8.2.5",
-    "core-js": "^3.22.1",
+    "core-js": "^3.25.1",
     "standard": "^17.0.0",
-    "webpack": "^5.72.0",
-    "webpack-cli": "^4.9.2"
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
   },
   "repository": {
     "type": "git",
@@ -26,7 +25,7 @@
     "url": "https://github.com/zv/tree/issues"
   },
   "scripts": {
-    "build": "webpack build"
+    "build": "webpack build --mode production"
   },
   "homepage": "https://github.com/zv/tree#readme"
 }
