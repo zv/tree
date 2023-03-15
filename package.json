@@ -9,7 +9,7 @@
     "babel-loader": "^8.2.5",
     "core-js": "^3.25.1",
     "standard": "^17.0.0",
-    "webpack": "^5.74.0",
+    "webpack": "^5.76.0",
     "webpack-cli": "^4.10.0"
   },
   "repository": {
